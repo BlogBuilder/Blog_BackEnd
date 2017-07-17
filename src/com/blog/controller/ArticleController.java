@@ -1,9 +1,6 @@
 package com.blog.controller;
 
-import com.blog.domain.Article;
-import com.blog.domain.Article_Category;
-import com.blog.domain.Article_Tag;
-import com.blog.domain.Material;
+import com.blog.domain.*;
 import com.blog.utils.ParaUtils;
 import com.blog.utils.RenderUtils;
 import com.jfinal.core.Controller;
@@ -14,10 +11,7 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by qulongjun on 2017/7/15.
@@ -144,6 +138,36 @@ public class ArticleController extends Controller {
                 }
             });
             renderJson(result ? RenderUtils.CODE_SUCCESS : RenderUtils.CODE_ERROR);
+        } catch (Exception e) {
+            renderError(500);
+        }
+    }
+
+
+    public void hot() {
+        try {
+            List result = new ArrayList();
+            List<Article> articleList = Article.articleDao.find("SELECT a.* FROM `db_comment` c,`db_article` a WHERE c.article_id=a.id AND a.type=2 AND a.state=1 GROUP BY c.article_id ORDER BY COUNT(*) DESC LIMIT 5\n");
+            for (Article article : articleList) {
+                Map temp = article._toJson(true);
+                temp.put("comment_num", Comment.commentDao.find("SELECT * FROM `db_comment` c WHERE c.state=1 AND c.article_id=" + article.get("id")).size());
+                result.add(temp);
+            }
+            Map t = new HashMap();
+            t.put("results", result);
+            renderJson(t);
+        } catch (Exception e) {
+            renderError(500);
+        }
+
+    }
+
+    public void recently() {
+        try {
+            List<Article> articleList = Article._toListJson(Article.articleDao.find("SELECT * FROM `db_article` a WHERE a.state=1 AND a.type=2  ORDER BY create_time DESC LIMIT 0,5"), true);
+            Map results = new HashMap();
+            results.put("results", articleList);
+            renderJson(results);
         } catch (Exception e) {
             renderError(500);
         }

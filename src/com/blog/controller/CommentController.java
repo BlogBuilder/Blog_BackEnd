@@ -11,6 +11,7 @@ import com.jfinal.render.Render;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -101,5 +102,17 @@ public class CommentController extends Controller {
                     "}";
         }
         return json;
+    }
+
+
+    public void recently() {
+        try {
+            List<Comment> commentList = Comment.toListJson(Comment.commentDao.find("SELECT * FROM `db_comment` c WHERE c.state=1 ORDER BY c.create_time DESC LIMIT 5"));
+            Map result = new HashMap();
+            result.put("results", commentList);
+            renderJson(result);
+        } catch (Exception e) {
+            renderError(500);
+        }
     }
 }

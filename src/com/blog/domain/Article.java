@@ -31,7 +31,7 @@ public class Article extends Model<Article> {
         }
 
         entry.put("category", Category.categoryDao.findFirst("SELECT c.* FROM `db_article_category` a, `db_category` c WHERE a.category_id = c.id AND  a.article_id=" + this.get("id"))._toJson());
-
+        entry.put("comment_num",Comment.commentDao.find("SELECT * FROM `db_comment` WHERE article_id="+this.get("id")).size());
 
         switch (this.getInt("type")) {
             case 1:
