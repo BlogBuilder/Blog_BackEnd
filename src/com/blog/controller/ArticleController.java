@@ -9,6 +9,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -196,6 +197,74 @@ public class ArticleController extends Controller {
                 renderJson(result ? RenderUtils.CODE_SUCCESS : RenderUtils.CODE_ERROR);
             } else
                 renderJson(RenderUtils.CODE_EMPTY);
+        } catch (Exception e) {
+            renderError(500);
+        }
+    }
+
+
+    public void change() {
+        try {
+            Boolean result = Db.tx(new IAtom() {
+                @Override
+                public boolean run() throws SQLException {
+                    int id = getParaToInt("id");
+                    Article article = Article.articleDao.findById(id);
+                    if (article != null) {
+                        Boolean result = true;
+                        article
+                                .set("type", getPara("type"))
+                                .set("title", getPara("title"))
+                                .set("summary", getPara("summary"))
+                                .set("quote_author", getPara("quote_author"))
+                                .set("content", getPara("content"));
+                        result = result && article.update();
+
+                        List<Article_Tag> ids = Article_Tag.articleTagDao.find("SELECT id FROM `db_article_tag` WHERE article_id=" + id);
+                        for (Article_Tag article_tag : ids) {
+                            result = result && article_tag.delete();
+                        }
+                        Integer[] tagList = getParaValuesToInt("tags[]");
+                        for (int tag : tagList) {
+                            Article_Tag articleTag = new Article_Tag();
+                            result = result && articleTag
+                                    .set("article_id", article.get("id"))
+                                    .set("tag_id", tag)
+                                    .save();
+                        }
+
+                        Article_Category category = Article_Category.articleCategoryDao.findFirst("SELECT * FROM `db_article_category` WHERE article_id=" + id);
+                        if (category != null) {
+                            result = result && category.delete();
+                        }
+                        int category_id = getParaToInt("categoryId");
+                        Article_Category articleCategory = new Article_Category();
+                        result = result && articleCategory
+                                .set("article_id", article.get("id"))
+                                .set("category_id", category_id)
+                                .save();
+
+
+                        List<Material> materialIds = Material.materialDao.find("SELECT id FROM `db_article_material` WHERE article_id=" + id);
+                        for (Material mat : materialIds) {
+                            result = result && mat.delete();
+                        }
+                        String[] materials = getParaValues("materials[]");
+                        for (String materialStr : materials) {
+                            Material material = new Material();
+                            result = result && material
+                                    .set("article_id", article.get("id"))
+                                    .set("material", materialStr)
+                                    .save();
+                        }
+
+
+                        return result;
+                    }
+                    return false;
+                }
+            });
+            renderJson(result ? RenderUtils.CODE_SUCCESS : RenderUtils.CODE_ERROR);
         } catch (Exception e) {
             renderError(500);
         }
