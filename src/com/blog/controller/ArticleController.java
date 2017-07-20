@@ -111,7 +111,7 @@ public class ArticleController extends Controller {
                             .set("content", getPara("content"))
                             .set("state", 1);
                     result = result && article.save();
-                    Integer[] tagList = getParaValuesToInt("tags");
+                    Integer[] tagList = getParaValuesToInt("tags[]");
                     for (int tag : tagList) {
                         Article_Tag articleTag = new Article_Tag();
                         result = result && articleTag
@@ -119,19 +119,19 @@ public class ArticleController extends Controller {
                                 .set("tag_id", tag)
                                 .save();
                     }
-                    int category_id = getParaToInt("category");
+                    int category_id = getParaToInt("categoryId");
                     Article_Category articleCategory = new Article_Category();
                     result = result && articleCategory
                             .set("article_id", article.get("id"))
                             .set("category_id", category_id)
                             .save();
 
-                    String[] materials = getParaValues("materials");
+                    String[] materials = getParaValues("materials[]");
                     for (String materialStr : materials) {
                         Material material = new Material();
                         result = result && material
                                 .set("article_id", article.get("id"))
-                                .set("material", material)
+                                .set("material", materialStr)
                                 .save();
                     }
                     return result;

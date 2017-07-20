@@ -2,6 +2,7 @@
 package com.blog.controller;
 
 
+import com.blog.utils.QiniuUtil;
 import com.blog.utils.RenderUtils;
 import com.jfinal.core.Controller;
 import com.jfinal.upload.UploadFile;
@@ -16,12 +17,16 @@ public class FileController extends Controller {
     public void upload() {
         try {
             UploadFile uploadFile = getFile();
-            Map result = RenderUtils.codeFactory(200);
-            String path = " /upload\\" + uploadFile.getFileName();
-            System.out.println(path);
-            result.put("path", path);
-            result.put("fileName", uploadFile.getOriginalFileName());
-            renderJson(result);
+            String key = new QiniuUtil().upload(uploadFile.getFile());
+            if (key != null) {
+                Map result = RenderUtils.codeFactory(200);
+                result.put("path", "http://cdn.qulongjun.cn/" + key);
+                String[] data = {"http://cdn.qulongjun.cn/" + key};
+                result.put("errno", 0);
+                result.put("data", data);
+                renderJson(result);
+            } else
+                renderJson(RenderUtils.CODE_ERROR);
         } catch (Exception e) {
             renderError(500);
         }
