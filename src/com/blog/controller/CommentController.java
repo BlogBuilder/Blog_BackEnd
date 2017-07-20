@@ -115,4 +115,14 @@ public class CommentController extends Controller {
             renderError(500);
         }
     }
+
+    public void delete() {
+        try {
+            int id = getParaToInt("id");
+            Boolean result = Comment.commentDao.deleteById(id);
+            renderJson(result ? RenderUtils.CODE_SUCCESS : RenderUtils.CODE_ERROR);
+        } catch (Exception e) {
+            renderError(500);
+        }
+    }
 }

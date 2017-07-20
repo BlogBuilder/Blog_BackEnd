@@ -33,9 +33,10 @@ public class ArticleController extends Controller {
             if (rowCount == 0) {
                 rowCount = ParaUtils.getRowCount();
             }
-            String paras = "WHERE a.state=1 ";
+            String paras = "WHERE 1=1 ";
             String tables = " FROM `db_article` a ";
             Object[] keys = condition.keySet().toArray();
+            boolean flag = false;
             for (int i = 0; i < keys.length; i++) {
                 String key = (String) keys[i];
                 Object value = condition.get(key);
@@ -54,10 +55,18 @@ public class ArticleController extends Controller {
                     case "time":
                         paras += " AND date_format(a.create_time,'%Y-%m')='" + value + "' ";
                         break;
+                    case "state":
+                        flag = true;
+                        paras += " AND a.state=" + value + " ";
+                        break;
                     default:
-                        paras += ("AND " + key + " like \"%" + value + "%\"");
+                        paras += ("AND " + key + " = \"" + value + "\"");
                 }
             }
+            if (!flag) {
+                paras += " AND a.state=1 ";
+            }
+
             Page<Article> articlePage = Article.articleDao.paginate(currentPage, rowCount, "SELECT a.*", tables + paras);
             List<Article> articleList = articlePage.getList();
             Map results = new HashMap();
@@ -79,7 +88,8 @@ public class ArticleController extends Controller {
     public void findById() {
         try {
             int article_id = getParaToInt("id");
-            Article article = Article.articleDao.findById(article_id);
+            //Article article = Article.articleDao.findById(article_id);
+            Article article = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id=" + article_id);
             if (article != null) {
                 Map result = article._toJson(false);
                 renderJson(result);
@@ -168,6 +178,24 @@ public class ArticleController extends Controller {
             Map results = new HashMap();
             results.put("results", articleList);
             renderJson(results);
+        } catch (Exception e) {
+            renderError(500);
+        }
+    }
+
+
+    /**
+     * 将文章移动至回收站
+     */
+    public void dustbin() {
+        try {
+            int id = getParaToInt("id");
+            Article article = Article.articleDao.findById(id);
+            if (article != null) {
+                Boolean result = article.set("state", -1).update();
+                renderJson(result ? RenderUtils.CODE_SUCCESS : RenderUtils.CODE_ERROR);
+            } else
+                renderJson(RenderUtils.CODE_EMPTY);
         } catch (Exception e) {
             renderError(500);
         }
