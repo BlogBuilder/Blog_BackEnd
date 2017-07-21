@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.blog.domain.*;
 import com.blog.utils.ParaUtils;
 import com.blog.utils.RenderUtils;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -25,6 +26,7 @@ public class ArticleController extends Controller {
     /**
      * 文章列表
      */
+    @Clear
     public void list() {
         try {
             int rowCount = getParaToInt("rowCount");
@@ -86,6 +88,7 @@ public class ArticleController extends Controller {
     /**
      * 根据id查找文章
      */
+    @Clear
     public void findById() {
         try {
             int article_id = getParaToInt("id");
@@ -155,6 +158,7 @@ public class ArticleController extends Controller {
     }
 
 
+    @Clear
     public void hot() {
         try {
             List result = new ArrayList();
@@ -173,6 +177,7 @@ public class ArticleController extends Controller {
 
     }
 
+    @Clear
     public void recently() {
         try {
             List<Article> articleList = Article._toListJson(Article.articleDao.find("SELECT * FROM `db_article` a WHERE a.state=1 AND a.type=2  ORDER BY create_time DESC LIMIT 0,5"), true);

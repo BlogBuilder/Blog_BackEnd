@@ -1,5 +1,6 @@
 package com.blog.config;
 
+import com.blog.Interceptor.LoginInterceptor;
 import com.blog.domain.*;
 import com.jfinal.config.*;
 import com.jfinal.kit.PathKit;
@@ -60,6 +61,7 @@ public class CommonConfig extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors me) {
+        me.add(new LoginInterceptor());
     }
 
     @Override

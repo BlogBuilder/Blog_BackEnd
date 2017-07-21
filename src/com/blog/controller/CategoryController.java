@@ -4,6 +4,7 @@ import com.blog.domain.Category;
 import com.blog.domain.Tag;
 import com.blog.utils.ParaUtils;
 import com.blog.utils.RenderUtils;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -80,6 +81,7 @@ public class CategoryController extends Controller {
     /**
      * 返回全部state为1的分类
      */
+    @Clear
     public void list() {
         try {
             List<Category> categoryList = Category._toListJson(Category.categoryDao.find("SELECT * FROM `db_category` WHERE state=1"));
@@ -95,6 +97,7 @@ public class CategoryController extends Controller {
     /**
      * 查找文章分类
      */
+    @Clear
     public void findById() {
         try {
             int id = getParaToInt("id");

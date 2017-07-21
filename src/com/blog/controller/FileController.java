@@ -4,6 +4,7 @@ package com.blog.controller;
 
 import com.blog.utils.QiniuUtil;
 import com.blog.utils.RenderUtils;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.upload.UploadFile;
 
@@ -14,6 +15,7 @@ public class FileController extends Controller {
     /**
      * 文件上传功能
      */
+    @Clear
     public void upload() {
         try {
             UploadFile uploadFile = getFile();

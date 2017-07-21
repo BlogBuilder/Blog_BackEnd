@@ -4,6 +4,7 @@ import com.blog.domain.Article;
 import com.blog.domain.Comment;
 import com.blog.utils.ParaUtils;
 import com.blog.utils.RenderUtils;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
@@ -22,6 +23,7 @@ public class CommentController extends Controller {
     /**
      * 创建评论
      */
+    @Clear
     public void create() {
         try {
             int article_id = getParaToInt("id");
@@ -50,6 +52,7 @@ public class CommentController extends Controller {
     /**
      * 获取评论列表
      */
+    @Clear
     public void list() {
         Integer id = getParaToInt("id");
         List<Record> recordList = Db.find("SELECT c.* FROM `db_comment` c WHERE c.parent IS NULL AND c.article_id =" + id);
@@ -105,6 +108,7 @@ public class CommentController extends Controller {
     }
 
 
+    @Clear
     public void recently() {
         try {
             List<Comment> commentList = Comment.toListJson(Comment.commentDao.find("SELECT * FROM `db_comment` c WHERE c.state=1 ORDER BY c.create_time DESC LIMIT 5"));

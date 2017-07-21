@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -11,6 +12,7 @@ import java.util.Map;
  * Created by qulongjun on 2017/7/16.
  */
 public class AuthorController extends Controller {
+    @Clear
     public void info() {
         try {
             Prop p = PropKit.use("author.properties");

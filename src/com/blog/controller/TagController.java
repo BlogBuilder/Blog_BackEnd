@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.blog.domain.Tag;
 import com.blog.utils.ParaUtils;
 import com.blog.utils.RenderUtils;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -33,6 +34,7 @@ public class TagController extends Controller {
     /**
      * 返回全部state为1的标签
      */
+    @Clear
     public void list() {
         try {
             List<Tag> tagList = Tag._toListJson(Tag.tagDao.find("SELECT * FROM `db_tag` WHERE state=1"));
@@ -92,6 +94,7 @@ public class TagController extends Controller {
     /**
      * 查找文章标签
      */
+    @Clear
     public void findById() {
         try {
             int id = getParaToInt("id");
