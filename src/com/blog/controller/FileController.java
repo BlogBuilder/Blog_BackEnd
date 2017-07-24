@@ -7,6 +7,7 @@ import com.blog.utils.RenderUtils;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.upload.UploadFile;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class FileController extends Controller {
     @Clear
     public void upload() {
         try {
-            UploadFile uploadFile = getFile();
+            UploadFile uploadFile = getFile("file");
             String key = new QiniuUtil().upload(uploadFile.getFile());
             if (key != null) {
                 Map result = RenderUtils.codeFactory(200);
@@ -30,6 +31,7 @@ public class FileController extends Controller {
             } else
                 renderJson(RenderUtils.CODE_ERROR);
         } catch (Exception e) {
+            e.printStackTrace();
             renderError(500);
         }
     }
