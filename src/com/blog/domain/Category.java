@@ -19,7 +19,7 @@ public class Category extends Model<Category> {
         for (String key : this._getAttrNames()) {
             entry.put(key, this.get(key));
         }
-        int count = Article_Category.articleCategoryDao.find("SELECT * FROM `db_article_category` WHERE category_id=" + this.get("id")).size();
+        int count = Article_Category.articleCategoryDao.find("SELECT c.* FROM `db_article_category` c,`db_article` a WHERE c.article_id=a.id AND a.state=1 AND c.category_id=" + this.get("id")).size();
         entry.put("count", count);
         return entry;
     }

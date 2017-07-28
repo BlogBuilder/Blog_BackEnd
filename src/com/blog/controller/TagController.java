@@ -37,7 +37,7 @@ public class TagController extends Controller {
     @Clear
     public void list() {
         try {
-            List<Tag> tagList = Tag._toListJson(Tag.tagDao.find("SELECT * FROM `db_tag` WHERE state=1"));
+            List<Tag> tagList = Tag._toListJson(Tag.tagDao.find("SELECT * FROM `db_tag` t WHERE state=1"));
             Map result = new HashMap();
             result.put("results", tagList);
             renderJson(result);
