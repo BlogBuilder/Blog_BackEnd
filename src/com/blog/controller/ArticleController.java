@@ -90,7 +90,7 @@ public class ArticleController extends Controller {
             int article_id = getParaToInt("id");
             Article article = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id=" + article_id);
             if (article != null) {
-                article.set("view_count", article.getInt("view_count") + 1);
+                article.set("view_count", article.getInt("view_count") + 1).update();
                 Map result = article._toJson(false);
                 renderJson(result);
             } else
@@ -273,15 +273,35 @@ public class ArticleController extends Controller {
                             result = result && mat.delete();
                         }
                         String[] materials = getParaValues("materials[]");
-                        for (String materialStr : materials) {
-                            Material material = new Material();
-                            result = result && material
-                                    .set("article_id", article.get("id"))
-                                    .set("material", materialStr)
-                                    .save();
+                        if (materials != null) {
+                            for (String materialStr : materials) {
+                                Material material = new Material();
+                                result = result && material
+                                        .set("article_id", article.get("id"))
+                                        .set("material", materialStr)
+                                        .save();
+                            }
+                        } else {
+                            //使用默认素材
+                            Prop setting = PropKit.use("setting.properties");
+                            String defaultCover = "";
+                            switch (getParaToInt("type")) {
+                                case 1:
+                                case 2:
+                                    defaultCover = setting.get("defaultCover");
+                                    break;
+                                case 4:
+                                    defaultCover = setting.get("defaultAudio");
+                                    break;
+                            }
+                            if (defaultCover != "") {
+                                Material material = new Material();
+                                result = result && material
+                                        .set("article_id", article.get("id"))
+                                        .set("material", defaultCover)
+                                        .save();
+                            }
                         }
-
-
                         return result;
                     }
                     return false;
