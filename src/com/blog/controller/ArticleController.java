@@ -66,7 +66,7 @@ public class ArticleController extends Controller {
                 paras += " AND a.state=1 ";
             }
 
-            Page<Article> articlePage = Article.articleDao.paginate(currentPage, rowCount, "SELECT a.*", tables + paras);
+            Page<Article> articlePage = Article.articleDao.paginate(currentPage, rowCount, "SELECT a.*", tables + paras + " ORDER BY id DESC");
             List<Article> articleList = articlePage.getList();
             Map results = new HashMap();
             results.put("results", Article._toListJson(articleList, true));

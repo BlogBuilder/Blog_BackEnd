@@ -19,7 +19,7 @@ public class FileController extends Controller {
     @Clear
     public void upload() {
         try {
-            UploadFile uploadFile = getFile("file");
+            UploadFile uploadFile = getFile();
             String key = new QiniuUtil().upload(uploadFile.getFile());
             if (key != null) {
                 Map result = RenderUtils.codeFactory(200);
