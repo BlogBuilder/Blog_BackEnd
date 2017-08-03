@@ -179,15 +179,9 @@ public class ArticleController extends Controller {
     @Clear
     public void hot() {
         try {
-            List result = new ArrayList();
-            List<Article> articleList = Article.articleDao.find("SELECT a.* FROM `db_comment` c,`db_article` a WHERE c.article_id=a.id AND a.type=2 AND a.state=1 GROUP BY c.article_id ORDER BY COUNT(*) DESC LIMIT 5\n");
-            for (Article article : articleList) {
-                Map temp = article._toJson(true);
-                temp.put("comment_num", Comment.commentDao.find("SELECT * FROM `db_comment` c WHERE c.state=1 AND c.article_id=" + article.get("id")).size());
-                result.add(temp);
-            }
+            List<Article> articleList = Article.articleDao.find("SELECT * FROM `db_article` WHERE state=1 AND type=2 ORDER BY view_count DESC LIMIT 0,5");
             Map t = new HashMap();
-            t.put("results", result);
+            t.put("results", Article._toListJson(articleList, true));
             renderJson(t);
         } catch (Exception e) {
             renderError(500);
