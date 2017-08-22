@@ -18,5 +18,6 @@ public class FrontRoutes extends Routes {
         add("/api/comment", CommentController.class);
         add("/api/user", UserController.class);
         add("/api/file", FileController.class);
+        add("/api/projectCategory", ProjectCategoryController.class);
     }
 }
