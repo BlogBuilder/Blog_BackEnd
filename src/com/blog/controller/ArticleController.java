@@ -81,6 +81,19 @@ public class ArticleController extends Controller {
     }
 
 
+    @Clear
+    public void getLatest() {
+        try {
+            Article article = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 ORDER BY id DESC");
+            if (article != null) {
+                renderJson(article._toJson(true));
+            } else renderNull();
+        } catch (Exception e) {
+            renderError(500);
+        }
+
+    }
+
     /**
      * 根据id查找文章
      */

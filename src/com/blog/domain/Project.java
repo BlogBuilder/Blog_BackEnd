@@ -24,7 +24,7 @@ public class Project extends Model<Project> {
         summary.put("category", Project_Belongs_Category._toJSONList(project_belongs_categoryList));
         List<Project_Participator> projectParticipators = Project_Participator.projectParticipatorDao.find("SELECT * FROM `db_project_participator` WHERE project_id=" + this.get("id"));
         summary.put("participator", Project_Participator._toJSONList(projectParticipators));
-        summary.put("state", this.get("state"));
+        summary.put("state", this.get("process"));
         summary.put("create_date", this.get("create_date"));
         summary.put("index_site", this.get("index_site"));
         result.put("summary", summary);
