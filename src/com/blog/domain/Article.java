@@ -24,14 +24,14 @@ public class Article extends Model<Article> {
         if (!isSimple) {
             entry.put("tag", Tag._toListJson(Tag.tagDao.find("SELECT t.* FROM `db_article_tag` a,`db_tag` t WHERE a.tag_id = t.id AND  a.article_id=" + this.get("id"))));
 
-            Article nextArticle = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE id>" + this.get("id"));
-            Article prevArticle = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE id<" + this.get("id")+" ORDER BY id DESC");
+            Article nextArticle = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id>" + this.get("id"));
+            Article prevArticle = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id<" + this.get("id") + " ORDER BY id DESC");
             entry.put("next", nextArticle != null ? nextArticle._toSKipJson() : null);
-            entry.put("prev", prevArticle != null ? prevArticle._toSKipJson() : null);
+             entry.put("prev", prevArticle != null ? prevArticle._toSKipJson() : null);
         }
 
         entry.put("category", Category.categoryDao.findFirst("SELECT c.* FROM `db_article_category` a, `db_category` c WHERE a.category_id = c.id AND  a.article_id=" + this.get("id"))._toJson());
-        entry.put("comment_num",Comment.commentDao.find("SELECT * FROM `db_comment` WHERE article_id="+this.get("id")).size());
+        entry.put("comment_num", Comment.commentDao.find("SELECT * FROM `db_comment` WHERE article_id=" + this.get("id")).size());
 
         switch (this.getInt("type")) {
             case 1:

@@ -4,6 +4,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import sun.misc.BASE64Encoder;
+import sun.misc.Regexp;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -13,6 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by qulongjun on 2016/10/26.
@@ -116,5 +119,39 @@ public class ParaUtils extends Controller {
         Prop setting = PropKit.use("setting.properties");
         int rowCount = setting.getInt("rowCount");
         return rowCount;
+    }
+
+    public static String IPConvert(String ip) {
+        if (isIP(ip)) {
+            String[] ipList = ip.split("\\.");
+            String str = "";
+            if (ipList.length == 4) {
+                str = ipList[0] + "." + ipList[1] + ".**.**";
+            }
+            if (ipList.length == 6) {
+                str = ipList[0] + "." + ipList[1] + "." + ipList[2] + ".**.**.**";
+            }
+            return str != "" ? str : "佚名";
+        } else
+            return "佚名";
+    }
+
+
+    public static boolean isIP(String addr) {
+        if (addr.length() < 7 || addr.length() > 15 || "".equals(addr)) {
+            return false;
+        }
+        /**
+         * 判断IP格式和范围
+         */
+        String rexp = "([1-9]|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
+
+        Pattern pat = Pattern.compile(rexp);
+
+        Matcher mat = pat.matcher(addr);
+
+        boolean ipAddress = mat.find();
+
+        return ipAddress;
     }
 }
