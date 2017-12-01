@@ -31,7 +31,7 @@ public class CommentController extends Controller {
             if (article != null) {
                 Comment comment = new Comment();
                 comment
-                        .set("name", getRequest().getRemoteAddr())
+                        .set("name", ParaUtils.getIpAddr(getRequest()))
                         .set("create_time", ParaUtils.timeFormat.format(new Date()))
                         .set("content", getPara("content"))
                         .set("article_id", getPara("id"))

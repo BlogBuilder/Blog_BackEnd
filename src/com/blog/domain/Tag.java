@@ -16,7 +16,7 @@ public class Tag extends Model<Tag> {
     public Map _toJson() {
         Map entry = new HashMap();
         int count = Article_Tag.articleTagDao.find("SELECT t.* FROM `db_article_tag` t,`db_article` a WHERE t.article_id=a.id AND a.state=1 AND t.tag_id=" + this.get("id")).size();
-        if (count == 0) return null;
+//        if (count == 0) return null;
         for (String key : this._getAttrNames()) {
             entry.put(key, this.get(key));
         }
