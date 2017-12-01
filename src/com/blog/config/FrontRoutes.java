@@ -3,6 +3,7 @@ package com.blog.config;
 import com.blog.controller.*;
 
 import com.blog.domain.Comment;
+import com.blog.domain.Project;
 import com.jfinal.config.Routes;
 
 /**
@@ -18,5 +19,7 @@ public class FrontRoutes extends Routes {
         add("/api/comment", CommentController.class);
         add("/api/user", UserController.class);
         add("/api/file", FileController.class);
+        add("/api/projectCategory", ProjectCategoryController.class);
+        add("/api/project", ProjectController.class);
     }
 }

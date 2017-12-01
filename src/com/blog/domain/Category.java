@@ -16,10 +16,11 @@ public class Category extends Model<Category> {
 
     public Map _toJson() {
         Map entry = new HashMap();
+        int count = Article_Category.articleCategoryDao.find("SELECT c.* FROM `db_article_category` c,`db_article` a WHERE c.article_id=a.id AND a.state=1 AND c.category_id=" + this.get("id")).size();
+//        if (count == 0) return null;
         for (String key : this._getAttrNames()) {
             entry.put(key, this.get(key));
         }
-        int count = Article_Category.articleCategoryDao.find("SELECT c.* FROM `db_article_category` c,`db_article` a WHERE c.article_id=a.id AND a.state=1 AND c.category_id=" + this.get("id")).size();
         entry.put("count", count);
         return entry;
     }
@@ -27,7 +28,10 @@ public class Category extends Model<Category> {
     public static List _toListJson(List<Category> categoryList) {
         List arr = new ArrayList();
         for (Category category : categoryList) {
-            arr.add(category._toJson());
+            Map result = category._toJson();
+            if (result != null) {
+                arr.add(result);
+            }
         }
         return arr;
     }

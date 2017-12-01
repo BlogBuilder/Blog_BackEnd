@@ -31,7 +31,7 @@ public class CommentController extends Controller {
             if (article != null) {
                 Comment comment = new Comment();
                 comment
-                        .set("name", getPara("name"))
+                        .set("name", ParaUtils.getIpAddr(getRequest()))
                         .set("create_time", ParaUtils.timeFormat.format(new Date()))
                         .set("content", getPara("content"))
                         .set("article_id", getPara("id"))
@@ -77,7 +77,7 @@ public class CommentController extends Controller {
             //当前已经是最底层了,迭代结束,拼接JSON
             json = "{" +
                     "\"id\":" + parent.get("id") + "," +
-                    "\"name\":\"" + parent.get("name") + "\"," +
+                    "\"name\":\"" + ParaUtils.IPConvert(parent.getStr("name")) + "\"," +
                     "\"parent\":" + parent.get("parent") + "," +
                     "\"photo\":" + parent.get("photo") + "," +
                     "\"create_time\":\"" + parent.get("create_time") + "\"," +
@@ -96,7 +96,7 @@ public class CommentController extends Controller {
             commentJSON = commentJSON.substring(0, commentJSON.length() - 1);
             json = "{" +
                     "\"id\":" + parent.get("id") + "," +
-                    "\"name\":\"" + parent.get("name") + "\"," +
+                    "\"name\":\"" + ParaUtils.IPConvert(parent.getStr("name")) + "\"," +
                     "\"children\":[" + commentJSON + "]," +
                     "\"parent\":" + parent.get("parent") + "," +
                     "\"photo\":" + parent.get("photo") + "," +

@@ -1,5 +1,6 @@
 package com.blog.domain;
 
+import com.blog.utils.ParaUtils;
 import com.jfinal.plugin.activerecord.Model;
 
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ public class Comment extends Model<Comment> {
         Map result = new HashMap();
         for (String key : this._getAttrNames()) {
             result.put(key, this.get(key));
+            if (key.equals("name")) {
+                result.put(key, ParaUtils.IPConvert(this.getStr(key)));
+            }
         }
         return result;
     }

@@ -57,6 +57,15 @@ public class CommonConfig extends JFinalConfig {
         arp.addMapping("db_article_tag", Article_Tag.class);
         arp.addMapping("db_article_category", Article_Category.class);
         arp.addMapping("db_comment", Comment.class);
+
+        arp.addMapping("db_project", Project.class);
+        arp.addMapping("db_project_category", Project_Category.class);
+        arp.addMapping("db_project_belongs_category", Project_Belongs_Category.class);
+        arp.addMapping("db_project_features", Project_Feature.class);
+        arp.addMapping("db_project_history", Project_History.class);
+        arp.addMapping("db_project_material", Project_Material.class);
+        arp.addMapping("db_project_participator", Project_Participator.class);
+        arp.addMapping("db_project_skills", Project_Skill.class);
     }
 
     @Override

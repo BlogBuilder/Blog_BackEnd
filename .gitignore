@@ -2,3 +2,4 @@ out/*
 .idea/*
 Blog_BackEnd.iml
 Blog_Back.iml
+src/jdbc.properties
