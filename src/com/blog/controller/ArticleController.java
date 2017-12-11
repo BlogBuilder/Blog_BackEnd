@@ -87,13 +87,30 @@ public class ArticleController extends Controller {
     public void findById() {
         try {
             int article_id = getParaToInt("id");
-            Article article = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id=" + article_id);
-            if (article != null) {
-                article.set("view_count", article.getInt("view_count") + 1).update();
+            Article article = Article.articleDao.findById(article_id);
+            if (article != null && article.get("state") == 1) {
                 Map result = article._toJson(false);
                 renderJson(result);
             } else
                 renderJson(RenderUtils.CODE_EMPTY);
+        } catch (Exception e) {
+            renderError(500);
+        }
+    }
+
+
+    /**
+     * 计数
+     */
+    @Clear
+    public void count() {
+        try {
+            int article_id = getParaToInt("id");
+            Article article = Article.articleDao.findFirst("SELECT * FROM `db_article` WHERE state=1 AND id=" + article_id);
+            if (article != null) {
+                article.set("view_count", article.getInt("view_count") + 1).update();
+            }
+            renderNull();
         } catch (Exception e) {
             renderError(500);
         }
