@@ -27,7 +27,7 @@ public class CommonConfig extends JFinalConfig {
         me.setDevMode(getPropertyToBoolean("devMode", false));
         //设置视图模型
         me.setViewType(ViewType.JSP);
-        me.setBaseViewPath("/WEB-INF/pages");
+        me.setBaseViewPath("/");
         //me.setError404View("404.html");
         //设置下载路径
         // me.setBaseDownloadPath("/WEB-INF/download");
@@ -36,6 +36,7 @@ public class CommonConfig extends JFinalConfig {
         //http://localhost:8080/blog/1-3
         me.setUrlParaSeparator("-");
         me.setError403View("/WEB-INF/pages/common/404.html");
+        me.setFreeMarkerViewExtension(".html");
     }
 
     @Override
